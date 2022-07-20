@@ -54,17 +54,21 @@ class SoundCloudApi:
         self.client_id = "a8eOWIooPyKf3C0dApsQTVCopqEMNgDH"
 
     def find_url(self, trek):
-        while True:
-            a = requests.get(
-                f"https://api-v2.soundcloud.com/search?q={trek}&client_id={self.client_id}")
-            mas = a.json()
-            if a.status_code == 200:
-                break
-        if len(mas['collection']) > 0:
-            trek = mas['collection'][0]['permalink_url']
-        else:
+        try:
+            while True:
+                a = requests.get(
+                    f"https://api-v2.soundcloud.com/search?q={trek}&client_id={self.client_id}")
+                mas = a.json()
+                if a.status_code == 200:
+                    break
+            if len(mas['collection']) > 0:
+                trek = mas['collection'][0]['permalink_url']
+            else:
+                trek = "https://soundcloud.com/search/sounds?q=" + trek
+            return trek
+        except Exception:
             trek = "https://soundcloud.com/search/sounds?q=" + trek
-        return trek
+            return trek
 
     def track_name(self, url):
         a = requests.get(url)
